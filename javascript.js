@@ -1,7 +1,5 @@
 let humanScore = 0;
 let computerScore = 0;
-let humanChoice = getHumanChoice();
-let computerChoice = getComputerChoice();
 
 function getRandomNum() {
     let randomNum;
@@ -20,15 +18,6 @@ function getComputerChoice() {
     }
 }
 
-function getHumanChoice() {
-    const humanChoice = prompt("Enter your choice: (Rock, Paper, Scissors)");
-    if (humanChoice) {
-        return humanChoice.toLowerCase();
-    } else {
-        return '';
-    }
-}
-
 function playRound(humanChoice, computerChoice) {
     humanChoice = humanChoice.toLowerCase();
     computerChoice = computerChoice.toLowerCase();
@@ -38,7 +27,7 @@ function playRound(humanChoice, computerChoice) {
         (humanChoice === 'scissors') && (computerChoice === 'rock')
     ) {
         computerScore++;
-        return 'You Lose! ' + humanChoice + ' beats ' + computerChoice;
+        return 'You Lose! ' + computerChoice + ' beats ' + humanChoice;
     } else 
         if ((humanChoice === 'rock') && (computerChoice === 'scissors') || 
             (humanChoice === 'paper') && (computerChoice === 'rock') ||
@@ -53,21 +42,43 @@ function playRound(humanChoice, computerChoice) {
     }
 }
 
-function playGame(humanChoice, computerChoice) {
-    for (i = 0; i < 5; i++) {
-        humanChoice = getHumanChoice();
-        computerChoice = getComputerChoice();
-        console.log(playRound(humanChoice, computerChoice));
+function updateScore(result) {
+    document.getElementById('result').textContent = result;
+    document.getElementById('human-score').textContent = humanScore;
+    document.getElementById('computer-score').textContent = computerScore;
+}
+
+function showWinner() {
+    let winnerMessage;
+    if (humanScore > computerScore) {
+        winnerMessage = 'You Win the Game! Congratulations!';
+    } else {
+        winnerMessage = 'You Lose! Better Luck Next Time!'
     }
+
+    document.getElementById('result').textContent = winnerMessage;
+
+    document.getElementById('rock').disabled = true;
+    document.getElementById('paper').disabled = true;
+    document.getElementById('scissors').disabled = true;
+
 }
 
-playGame(humanChoice, computerChoice);
+function handleChoice(humanChoice) {
+    if (humanScore >= 5 || computerScore >= 5) {
+        return;
+    }
+        const computerChoice = getComputerChoice();
+        const result = playRound(humanChoice,computerChoice);
+        updateScore(result); 
+        
 
-if (humanScore > computerScore) {
-    console.log('You win! You beat the computer!');
-} else {
-    console.log("You suck! You're a loser!");
+    if (humanScore === 5 || computerScore === 5) {
+        showWinner();
+    }
+        
 }
 
-
-
+document.getElementById('rock').addEventListener("click", () =>handleChoice('rock'));
+document.getElementById('paper').addEventListener("click", () =>handleChoice('paper'));
+document.getElementById('scissors').addEventListener("click", () =>handleChoice('scissors'));
